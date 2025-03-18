@@ -1,0 +1,50 @@
+Build & Run with Docker:
+
+1.Create a Dockerfile
+  	Inside currency_wallet_api/, create a file Dockerfile
+  
+  	Copy the Below content into the file.
+
+  	# Use Python 3.10 as base image
+  	FROM python:3.10
+
+	# Set working directory in container
+	WORKDIR /app
+
+	# Copy requirements and install dependencies
+	COPY requirements.txt .
+	RUN pip install --no-cache-dir -r requirements.txt
+
+	# Copy all project files
+	COPY . .
+
+	# Expose port
+	EXPOSE 8000
+
+	# Run FastAPI app
+	CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+2. Build the Docker Image
+	docker build -t fastapi-wallet .
+
+3️. Run the Docker Container
+	docker run -p 8000:8000 fastapi-wallet
+4.Open http://localIPAddress:8000/docs 
+
+
+Automate Deployment with Docker Compose
+
+ 1.Create docker-compose.yml
+	version: "3.8"
+	services:
+  		fastapi_app:
+    		build: .
+    		ports:
+      			- "8000:8000"
+    		environment:
+      			- DATABASE_URL=sqlite:///wallet.db
+    		restart: always
+2.Run with Docker Compose
+	docker-compose up --build -d
+
+
