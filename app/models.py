@@ -1,23 +1,25 @@
+from pydantic import BaseModel
+from sqlalchemy import Column, Integer, String, Float
+from app.config import Config
 
-from collections import defaultdict
+Base = Config.Base
 
-# In-memory user data (for simplicity)
-users_db = {
-    1: {"username": "john", "password": "password123"}  # Dummy user data
-}
+class Wallet(Base):
+    __tablename__ = "wallet"
 
-wallets_db = defaultdict(dict)  # Dictionary for storing user wallets by user_id
+    id = Column(Integer, primary_key=True, index=True)
+    currency = Column(String, unique=True, index=True)
+    amount = Column(Float, default=0.0)
 
-# In-memory database for storing the wallet composition
-def get_wallet(user_id):
-    """Retrieve the wallet for the user."""
-    return wallets_db.get(user_id, {})
 
-def update_wallet(user_id, currency, amount):
-    """Update the wallet with a given amount of currency."""
-    wallet = get_wallet(user_id)
-    if currency in wallet:
-        wallet[currency] += amount
-    else:
-        wallet[currency] = amount
-    wallets_db[user_id] = wallet
+class User(BaseModel):
+    username: str
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class WalletEntry(BaseModel):
+    currency: str
+    amount: float
