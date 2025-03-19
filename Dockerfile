@@ -1,18 +1,18 @@
-# Use official Python image as base
-FROM python:3.10
+# Use an official Node.js runtime as a parent image
+FROM node:18
 
-# Set working directory in container
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy requirements file and install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy package.json and install dependencies
+COPY package.json ./
+RUN npm install
 
-# Copy project files into container
+# Copy the rest of the application
 COPY . .
 
-# Expose port
-EXPOSE 8000
+# Expose port 3000
+EXPOSE 3000
 
-# Command to run FastAPI app
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+# Start the application
+CMD ["node", "server.js"]
